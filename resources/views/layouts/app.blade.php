@@ -76,6 +76,9 @@
 
     <main class="app-content py-4">
         <div class="container">
+            @section('breadcrumbs', \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render())
+            @yield('breadcrumbs')
+            @include('layouts.messages.flash')
             @yield('content')
         </div>
     </main>
