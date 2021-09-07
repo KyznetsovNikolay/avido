@@ -19,13 +19,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
-    <div id="app">
+<body id="app">
+    <header>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
+                <a class="navbar-brand" href="{{ url('/') }}">Avido</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -74,10 +72,20 @@
                 </div>
             </div>
         </nav>
+    </header>
 
-        <main class="py-4">
+    <main class="app-content py-4">
+        <div class="container">
             @yield('content')
-        </main>
-    </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="border-top pt-3">
+                <p>&copy; {{ date('Y') }} - Avido</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
