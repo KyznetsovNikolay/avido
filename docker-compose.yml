@@ -1,0 +1,71 @@
+version: '3.4'
+
+services:
+  # nginx
+  web:
+    build: docker/nginx
+    container_name: avido.web
+    ports:
+      - ${BACKEND_NGINX_PORT:-80}:80
+    depends_on:
+      - app
+    restart: always
+    volumes:
+      - ./:/www/app
+
+  # PHP-fpm
+  app:
+    build: docker/php-fpm
+    user: "${UID:-1000}:${GID:-1000}"
+    container_name: avido.app
+    depends_on:
+      - db
+      - redis
+      - rabbit
+    volumes:
+      - ./:/www/app
+    working_dir: /www/app
+
+ # DB
+  db:
+    container_name: avido.mysql
+    image: mysql:8.0.17
+    ports:
+      - ${MYSQL_PORT:-3306}:3306
+    volumes:
+      - ./docker/mysql/.mysql:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: "docker"
+      MYSQL_DATABASE: "avido"
+      MYSQL_USER: "docker"
+      MYSQL_PASSWORD: "docker"
+      TZ: "UTC"
+
+  # Node
+  node:
+    image: node:16-alpine
+    container_name: avido.node
+    volumes:
+        - ./:/www/app
+    working_dir: /www/app
+    tty: true
+
+  # Redis
+  redis:
+    image: redis:6.0
+    container_name: avido.redis
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    volumes:
+      - ./docker/redis/.redis:/data
+
+  # RabbitMQ
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: avido.rabbit
+    ports:
+      - ${RABBIT_PORT:-55672}:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-docker}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-docker}
