@@ -26,3 +26,10 @@ Breadcrumbs::for('password.reset', function (BreadcrumbsGenerator $trail) {
     $trail->parent('password.request');
     $trail->push('Change', route('password.reset'));
 });
+
+// Admin
+
+Breadcrumbs::register('admin.home', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('home');
+    $crumbs->push('Admin', route('admin.home'));
+});

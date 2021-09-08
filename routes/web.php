@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Cabinet\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,15 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/cabinet', [HomeController::class, 'index'])->name('cabinet');
+
+Route::group(
+    [
+        'prefix' => 'admin',
+        'as' => 'admin.',
+        'middleware' => ['auth'],
+    ],
+    function () {
+        Route::get('/', App\Http\Controllers\Admin\HomeController::class)->name('home');
+    }
+);
