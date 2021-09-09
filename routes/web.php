@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Cabinet\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +27,7 @@ Route::group(
     ],
     function () {
         Route::get('/', App\Http\Controllers\Admin\HomeController::class)->name('home');
+        Route::resource('users', \App\Http\Controllers\Admin\Users\UsersController::class);
+        Route::post('/users/{user}/verify', [App\Http\Controllers\Admin\Users\UsersController::class, 'verify'])->name('users.verify');
     }
 );

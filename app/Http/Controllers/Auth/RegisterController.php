@@ -4,20 +4,24 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Mail\Auth\VerifyMail;
+use App\Http\UseCase\Auth\RegisterService;
 use App\Models\User\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
+
     /**
-     * Show the application registration form.
-     *
+     * @var RegisterService
+     */
+    private $registerService;
+
+    public function __construct(RegisterService $registerService)
+    {
+        $this->middleware('guest');
+        $this->registerService = $registerService;
+    }
+
+    /**
      * @return \Illuminate\View\View
      */
     public function showRegistrationForm()
@@ -25,49 +29,25 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
-
     public function register(RegisterRequest $request)
     {
-        /** @var User $user */
-        $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
-            'verify_token' => Str::random(),
-            'status' => User::STATUS_WAIT
-        ]);
-        $a = $user->email;
-//        Mail::to($user->email)->send(new VerifyMail($user));
-        event(new Registered($user));
-
+        $this->registerService->register($request);
         return redirect()->route('login')
             ->with('success', 'Check your email and click on the link to verify.');
     }
 
     public function verify($token)
     {
+        /** @var User $user */
         if (!$user = User::where('verify_token', $token)->first()) {
-            return redirect()->route('login')
-                ->with('error', 'Sorry your link can not be identified.');
+            return redirect()->route('login')->with('error', 'Sorry your link can not be identified.');
         }
 
-        if ($user->status != User::STATUS_WAIT) {
-            return redirect()->route('login')
-                ->with('error', 'Your email is already verified.');
+        try {
+            $this->registerService->verify($user->id);
+            return redirect()->route('login')->with('success', 'Your email is verified. You can now login');
+        } catch (\DomainException $e) {
+            return redirect()->route('login')->with('error', $e->getMessage());
         }
-
-        $user->status = User::STATUS_ACTIVE;
-        $user->verify_token = null;
-        $user->save();
-
-        return redirect()->route('login')
-            ->with('success', 'Your email is verified. You can now login');
     }
 }
