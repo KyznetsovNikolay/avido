@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Cabinet\HomeController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,7 +28,13 @@ Route::group(
     ],
     function () {
         Route::get('/', App\Http\Controllers\Admin\HomeController::class)->name('home');
-        Route::resource('users', \App\Http\Controllers\Admin\Users\UsersController::class);
-        Route::post('/users/{user}/verify', [App\Http\Controllers\Admin\Users\UsersController::class, 'verify'])->name('users.verify');
+        Route::post('users/store', \App\Http\Controllers\Admin\Users\Crud\StoreAction::class)->name('users.store');
+        Route::get('users/create', \App\Http\Controllers\Admin\Users\Crud\CreateAction::class)->name('users.create');
+        Route::get('users', \App\Http\Controllers\Admin\Users\Crud\IndexAction::class)->name('users.index');
+        Route::get('users/{user}', \App\Http\Controllers\Admin\Users\Crud\ShowAction::class)->name('users.show');
+        Route::delete('users/{user}', \App\Http\Controllers\Admin\Users\Crud\DeleteAction::class)->name('users.destroy');
+        Route::put('users/{user}', \App\Http\Controllers\Admin\Users\Crud\UpdateAction::class)->name('users.update');
+        Route::get('users/{user}/edit', \App\Http\Controllers\Admin\Users\Crud\ShowEditFormAction::class)->name('users.edit');
+        Route::post('/users/{user}/verify', App\Http\Controllers\Admin\Users\Crud\VerifyAction::class)->name('users.verify');
     }
 );

@@ -20,8 +20,8 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string',
-            'password' => 'required|string',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
         ];
     }
 }
