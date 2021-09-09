@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cabinet\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,10 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/cabinet', [HomeController::class, 'index'])->name('cabinet');
+
+Route::group(
+    [
+        'prefix' => 'admin',
+        'as' => 'admin.',
+        'middleware' => ['auth'],
+    ],
+    function () {
+        Route::get('/', App\Http\Controllers\Admin\HomeController::class)->name('home');
+        Route::resource('users', \App\Http\Controllers\Admin\Users\UsersController::class);
+        Route::post('/users/{user}/verify', [App\Http\Controllers\Admin\Users\UsersController::class, 'verify'])->name('users.verify');
+    }
+);
