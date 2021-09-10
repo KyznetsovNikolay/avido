@@ -128,7 +128,7 @@ class User extends Authenticatable
 
     public function changeRole(string $role): void
     {
-        if (!array_key_exists($role, Role::getRoles())) {
+        if (!in_array($role, Role::getRoles())) {
             throw new \InvalidArgumentException('Undefined role "' . $role . '"');
         }
         if ($this->role === $role) {
