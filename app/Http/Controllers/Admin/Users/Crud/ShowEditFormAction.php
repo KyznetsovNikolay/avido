@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Users\Crud;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController;
 use App\Models\User\User;
 
-class ShowEditFormAction extends Controller
+class ShowEditFormAction extends BaseController
 {
     public function __invoke(User $user)
     {
