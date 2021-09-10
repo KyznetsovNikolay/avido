@@ -66,6 +66,7 @@ class User extends Authenticatable
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            'role' => Role::ROLE_USER,
             'verify_token' => Str::random(),
             'status' => self::STATUS_WAIT
         ]);
@@ -82,6 +83,7 @@ class User extends Authenticatable
             'name' => $name,
             'email' => $email,
             'password' => Hash::make(Str::random()),
+            'role' => Role::ROLE_USER,
             'status' => self::STATUS_ACTIVE,
         ]);
     }
