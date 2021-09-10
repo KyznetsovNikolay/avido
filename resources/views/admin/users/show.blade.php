@@ -32,6 +32,18 @@
             <th>Email</th><td>{{ $user->email }}</td>
         </tr>
         <tr>
+            <th>Role</th>
+            <td>
+                @if ($user->isAdmin())
+                    <span class="badge badge-danger">Admin</span>
+                @elseif($user->isModerator())
+                    <span class="badge badge-success">Moderator</span>
+                @else
+                    <span class="badge badge-secondary">User</span>
+                @endif
+            </td>
+        </tr>
+        <tr>
             <th>Status</th>
             <td>
                 @if ($user->isWait())

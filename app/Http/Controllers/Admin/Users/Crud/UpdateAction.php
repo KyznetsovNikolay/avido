@@ -10,7 +10,7 @@ class UpdateAction extends Controller
 {
     public function __invoke(UpdateRequest $request, User $user)
     {
-        $user->update($request->only(['email', 'name', 'status']));
+        $user->update($request->only(['email', 'name', 'status', 'role']));
         return redirect()->route('admin.users.show', $user);
     }
 }

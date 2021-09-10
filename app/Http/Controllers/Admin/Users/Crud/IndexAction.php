@@ -10,6 +10,7 @@ class IndexAction extends Controller
     public function __invoke()
     {
         $users = User::orderBy('id', 'desc')->paginate(10);
-        return view('admin.users.index', compact('users'));
+        $roles = User::getRoleLabels();
+        return view('admin.users.index', compact('users', 'roles'));
     }
 }

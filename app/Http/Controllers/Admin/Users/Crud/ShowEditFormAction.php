@@ -10,6 +10,7 @@ class ShowEditFormAction extends Controller
     public function __invoke(User $user)
     {
         $statuses = User::getStatuses();
-        return view('admin.users.edit', compact('user', 'statuses'));
+        $roles = User::getRoleLabels();
+        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
     }
 }

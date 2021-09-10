@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use App\Models\Role\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $email
  * @property string $password
  * @property string status
+ * @property string role
  * @property string $verify_token
  */
 class User extends Authenticatable
@@ -33,7 +35,8 @@ class User extends Authenticatable
         'password',
         'verify_token',
         'status',
-        'email_verified_at'
+        'email_verified_at',
+        'role',
     ];
 
     /**
@@ -83,6 +86,15 @@ class User extends Authenticatable
         ]);
     }
 
+    public static function getRoleLabels(): array
+    {
+        return [
+            Role::ROLE_USER => 'User',
+            Role::ROLE_MODERATOR => 'Moderator',
+            Role::ROLE_ADMIN => 'Admin',
+        ];
+    }
+
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;
@@ -112,5 +124,26 @@ class User extends Authenticatable
             'email_verified_at' => now(),
             'verify_token' => null,
         ]);
+    }
+
+    public function changeRole(string $role): void
+    {
+        if (!array_key_exists($role, Role::getRoles())) {
+            throw new \InvalidArgumentException('Undefined role "' . $role . '"');
+        }
+        if ($this->role === $role) {
+            throw new \DomainException('Role is already assigned.');
+        }
+        $this->update(['role' => $role]);
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role === Role::ROLE_MODERATOR;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::ROLE_ADMIN;
     }
 }
