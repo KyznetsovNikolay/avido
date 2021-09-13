@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\City\City;
+use App\Models\Region\Region;
 use App\Models\User\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
@@ -55,4 +57,43 @@ Breadcrumbs::register('admin.users.show', function (BreadcrumbsGenerator $crumbs
 Breadcrumbs::register('admin.users.edit', function (BreadcrumbsGenerator $crumbs, User $user) {
     $crumbs->parent('admin.users.show', $user);
     $crumbs->push('Edit', route('admin.users.edit', $user));
+});
+
+// Regions
+
+Breadcrumbs::register('admin.regions.index', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Regions', route('admin.regions.index'));
+});
+
+Breadcrumbs::register('admin.regions.create', function (BreadcrumbsGenerator $crumbs) {
+    $crumbs->parent('admin.regions.index');
+    $crumbs->push('Create', route('admin.regions.create'));
+});
+
+Breadcrumbs::register('admin.regions.show', function (BreadcrumbsGenerator $crumbs, Region $region) {
+    $crumbs->parent('admin.regions.index');
+    $crumbs->push($region->name, route('admin.regions.show', $region));
+});
+
+Breadcrumbs::register('admin.regions.edit', function (BreadcrumbsGenerator $crumbs, Region $region) {
+    $crumbs->parent('admin.regions.show', $region);
+    $crumbs->push('Edit', route('admin.regions.edit', $region));
+});
+
+// Cities
+
+Breadcrumbs::register('admin.cities.create', function (BreadcrumbsGenerator $crumbs, Region $region) {
+    $crumbs->parent('admin.regions.show', $region);
+    $crumbs->push('Add city', route('admin.cities.create', $region));
+});
+
+Breadcrumbs::for('admin.cities.show', function (BreadcrumbsGenerator $crumbs, City $city) {
+    $crumbs->parent('admin.regions.show', $city->region);
+    $crumbs->push($city->name, route('admin.cities.show', $city));
+});
+
+Breadcrumbs::register('admin.cities.edit', function (BreadcrumbsGenerator $crumbs, City $city) {
+    $crumbs->parent('admin.cities.show', $city);
+    $crumbs->push('Edit', route('admin.cities.edit', $city));
 });

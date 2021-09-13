@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use App\Models\Role\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $email
  * @property string $password
  * @property string status
+ * @property string role
  * @property string $verify_token
  */
 class User extends Authenticatable
@@ -27,7 +29,15 @@ class User extends Authenticatable
     /**
      * @var string[]
      */
-    protected $fillable = ['name', 'email', 'password', 'verify_token', 'status'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'verify_token',
+        'status',
+        'email_verified_at',
+        'role',
+    ];
 
     /**
      * @var array
@@ -56,6 +66,7 @@ class User extends Authenticatable
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            'role' => Role::ROLE_USER,
             'verify_token' => Str::random(),
             'status' => self::STATUS_WAIT
         ]);
@@ -72,8 +83,18 @@ class User extends Authenticatable
             'name' => $name,
             'email' => $email,
             'password' => Hash::make(Str::random()),
+            'role' => Role::ROLE_USER,
             'status' => self::STATUS_ACTIVE,
         ]);
+    }
+
+    public static function getRoleLabels(): array
+    {
+        return [
+            Role::ROLE_USER => 'User',
+            Role::ROLE_MODERATOR => 'Moderator',
+            Role::ROLE_ADMIN => 'Admin',
+        ];
     }
 
     public function isWait(): bool
@@ -102,7 +123,29 @@ class User extends Authenticatable
 
         $this->update([
             'status' => self::STATUS_ACTIVE,
+            'email_verified_at' => now(),
             'verify_token' => null,
         ]);
+    }
+
+    public function changeRole(string $role): void
+    {
+        if (!in_array($role, Role::getRoles())) {
+            throw new \InvalidArgumentException('Undefined role "' . $role . '"');
+        }
+        if ($this->role === $role) {
+            throw new \DomainException('Role is already assigned.');
+        }
+        $this->update(['role' => $role]);
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role === Role::ROLE_MODERATOR;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::ROLE_ADMIN;
     }
 }

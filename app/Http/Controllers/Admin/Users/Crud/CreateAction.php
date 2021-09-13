@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Users\Crud;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController;
 
-class CreateAction extends Controller
+class CreateAction extends BaseController
 {
     public function __invoke()
     {

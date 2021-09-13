@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Users\Crud;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController;
 use App\Http\Requests\Admin\Users\CreateRequest;
 use App\Models\User\User;
 
-class StoreAction extends Controller
+class StoreAction extends BaseController
 {
     public function __invoke(CreateRequest $request)
     {

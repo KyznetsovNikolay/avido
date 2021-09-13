@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\Users;
+namespace App\Http\Requests\Admin\Regions;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class Request extends FormRequest
 {
     /**
      * @return bool
@@ -20,8 +20,8 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
         ];
     }
 }

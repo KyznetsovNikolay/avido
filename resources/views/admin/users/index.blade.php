@@ -22,6 +22,17 @@
                             <input id="name" class="form-control" name="name" value="{{ request('name') }}">
                         </div>
                     </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="role" class="col-form-label">Role</label>
+                            <select id="role" class="form-control" name="role">
+                                <option value=""></option>
+                                @foreach ($roles as $value => $label)
+                                    <option value="{{ $value }}"{{ $value === request('role') ? ' selected' : '' }}>{{ $label }}</option>
+                                @endforeach;
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="email" class="col-form-label">Email</label>
@@ -45,6 +56,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Role</th>
             <th>Status</th>
         </tr>
         </thead>
@@ -55,6 +67,15 @@
                 <td>{{ $user->id }}</td>
                 <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                 <td>{{ $user->email }}</td>
+                <td>
+                    @if ($user->isAdmin())
+                        <span class="badge badge-danger">Admin</span>
+                    @elseif($user->isModerator())
+                        <span class="badge badge-success">Moderator</span>
+                    @else
+                        <span class="badge badge-secondary">User</span>
+                    @endif
+                </td>
                 <td>
                     @if ($user->isWait())
                         <span class="badge badge-secondary">Waiting</span>
