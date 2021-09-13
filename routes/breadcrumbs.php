@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\City\City;
 use App\Models\Region\Region;
 use App\Models\User\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
@@ -78,4 +79,21 @@ Breadcrumbs::register('admin.regions.show', function (BreadcrumbsGenerator $crum
 Breadcrumbs::register('admin.regions.edit', function (BreadcrumbsGenerator $crumbs, Region $region) {
     $crumbs->parent('admin.regions.show', $region);
     $crumbs->push('Edit', route('admin.regions.edit', $region));
+});
+
+// Cities
+
+Breadcrumbs::register('admin.cities.create', function (BreadcrumbsGenerator $crumbs, Region $region) {
+    $crumbs->parent('admin.regions.show', $region);
+    $crumbs->push('Add city', route('admin.cities.create', $region));
+});
+
+Breadcrumbs::for('admin.cities.show', function (BreadcrumbsGenerator $crumbs, City $city) {
+    $crumbs->parent('admin.regions.show', $city->region);
+    $crumbs->push($city->name, route('admin.cities.show', $city));
+});
+
+Breadcrumbs::register('admin.cities.edit', function (BreadcrumbsGenerator $crumbs, City $city) {
+    $crumbs->parent('admin.cities.show', $city);
+    $crumbs->push('Edit', route('admin.cities.edit', $city));
 });

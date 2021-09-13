@@ -60,5 +60,20 @@ Route::group(
                 Route::get('{region}/edit', \App\Http\Controllers\Admin\Regions\Crud\ShowEditFormAction::class)->name('edit');
             }
         );
+
+        Route::group(
+            [
+                'prefix' => 'cities',
+                'as' => 'cities.',
+            ],
+            function () {
+                Route::post('{region}/store', \App\Http\Controllers\Admin\Cities\Crud\StoreAction::class)->name('store');
+                Route::get('{region}/create', \App\Http\Controllers\Admin\Cities\Crud\CreateAction::class)->name('create');
+                Route::get('{city}', \App\Http\Controllers\Admin\Cities\Crud\ShowAction::class)->name('show');
+                Route::delete('{city}', \App\Http\Controllers\Admin\Cities\Crud\DeleteAction::class)->name('destroy');
+                Route::put('{city}', \App\Http\Controllers\Admin\Cities\Crud\UpdateAction::class)->name('update');
+                Route::get('{city}/edit', \App\Http\Controllers\Admin\Cities\Crud\ShowEditFormAction::class)->name('edit');
+            }
+        );
     }
 );

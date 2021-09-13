@@ -25,6 +25,7 @@
         </tr>
         </tbody>
     </table>
+    <p><a href="{{ route('admin.cities.create', $region) }}" class="btn btn-success">Add City</a></p>
 
     @if(count($cities) > 0)
         <div class="p-3 mb-2 bg-light text-dark"><h4>Cities</h4></div>
@@ -39,7 +40,7 @@
 
             @foreach ($cities as $city)
                 <tr>
-                    <td>{{ $city->name }}</td>
+                    <td><a href="{{ route('admin.cities.show', $city) }}">{{ $city->name }}</a></td>
                     <td>{{ $city->slug }}</td>
                 </tr>
             @endforeach
