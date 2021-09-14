@@ -98,6 +98,19 @@ Route::group(
                         Route::post('/up', \App\Http\Controllers\Admin\Adverts\Category\UpCategoryAction::class)->name('up');
                         Route::post('/down', \App\Http\Controllers\Admin\Adverts\Category\DownCategoryAction::class)->name('down');
                         Route::post('/last', \App\Http\Controllers\Admin\Adverts\Category\LastCategoryAction::class)->name('last');
+
+                        Route::group(
+                            [
+                                'prefix' => 'attributes',
+                                'as' => 'attributes.'
+                            ], function () {
+                            Route::post('store', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\StoreAction::class)->name('store');
+                            Route::get('create', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\CreateAction::class)->name('create');
+                            Route::get('{attribute}', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\ShowAction::class)->name('show');
+                            Route::delete('{attribute}', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\DeleteAction::class)->name('destroy');
+                            Route::put('{attribute}', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\UpdateAction::class)->name('update');
+                            Route::get('{attribute}/edit', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\ShowEditFormAction::class)->name('edit');
+                        });
                 });
         });
     }
