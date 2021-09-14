@@ -75,5 +75,43 @@ Route::group(
                 Route::get('{city}/edit', \App\Http\Controllers\Admin\Cities\Crud\ShowEditFormAction::class)->name('edit');
             }
         );
+
+        Route::group(
+            [
+                'prefix' => 'adverts/categories',
+                'as' => 'adverts.categories.',
+            ],
+            function () {
+                Route::post('store', \App\Http\Controllers\Admin\Adverts\Category\Crud\StoreAction::class)->name('store');
+                Route::get('create', \App\Http\Controllers\Admin\Adverts\Category\Crud\CreateAction::class)->name('create');
+                Route::get('/', \App\Http\Controllers\Admin\Adverts\Category\Crud\IndexAction::class)->name('index');
+                Route::group(
+                    [
+                        'prefix' => '{category}',
+                    ],
+                    function () {
+                        Route::get('/', \App\Http\Controllers\Admin\Adverts\Category\Crud\ShowAction::class)->name('show');
+                        Route::delete('/', \App\Http\Controllers\Admin\Adverts\Category\Crud\DeleteAction::class)->name('destroy');
+                        Route::put('/', \App\Http\Controllers\Admin\Adverts\Category\Crud\UpdateAction::class)->name('update');
+                        Route::get('/edit', \App\Http\Controllers\Admin\Adverts\Category\Crud\ShowEditFormAction::class)->name('edit');
+                        Route::post('/first', \App\Http\Controllers\Admin\Adverts\Category\FirstCategoryAction::class)->name('first');
+                        Route::post('/up', \App\Http\Controllers\Admin\Adverts\Category\UpCategoryAction::class)->name('up');
+                        Route::post('/down', \App\Http\Controllers\Admin\Adverts\Category\DownCategoryAction::class)->name('down');
+                        Route::post('/last', \App\Http\Controllers\Admin\Adverts\Category\LastCategoryAction::class)->name('last');
+
+                        Route::group(
+                            [
+                                'prefix' => 'attributes',
+                                'as' => 'attributes.'
+                            ], function () {
+                            Route::post('store', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\StoreAction::class)->name('store');
+                            Route::get('create', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\CreateAction::class)->name('create');
+                            Route::get('{attribute}', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\ShowAction::class)->name('show');
+                            Route::delete('{attribute}', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\DeleteAction::class)->name('destroy');
+                            Route::put('{attribute}', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\UpdateAction::class)->name('update');
+                            Route::get('{attribute}/edit', \App\Http\Controllers\Admin\Adverts\Attribute\Crud\ShowEditFormAction::class)->name('edit');
+                        });
+                });
+        });
     }
 );
